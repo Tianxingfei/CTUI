@@ -1,0 +1,126 @@
+#------------------------------
+# Triggers
+# -----------------------------
+
+trigger:
+  branches:
+    include:
+      - master
+      - releases/*
+  paths:
+    exclude: #extend if required
+      - meta-table #to be changed
+
+pool:
+  vmImage: 'ubuntu-18.04'
+
+#----------------------------
+# maven authentication
+#----------------------------
+steps:
+- task: MavenAuthenticate@0
+  displayName: 'maven authentication'
+  inputs:
+    artifactsFeeds: 'intern-3rdparty-cleared'
+
+#----------------------------
+# maven stages
+#----------------------------
+
+- task: Maven@3
+  displayName: 'Run unit tests'
+  inputs:
+    mavenPomFile: './ctui-value-extraction/pom.xml'
+    mavenOptions: '-Xmx3072m'
+    mavenFeedAuthenticate: true
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    goals: 'clean test'
+
+- task: Maven@3
+  displayName: 'Run Sonar quality gate checks'
+  inputs:
+    mavenPomFile: './ctui-value-extraction/pom.xml'
+    mavenOptions: '-Xmx3072m'
+    mavenFeedAuthenticate: true
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    goals: 'sonar:sonar -D sonar.projectKey=$(SonarProjectKey) -D sonar.projectName=$(SonarProjectKey) -D sonar.host.url=$(SonarHostUrl) -D sonar.login=$(SonarLogin) -D sonar.branch.name=$(Build.SourceBranch) -D sonar.qualitygate.wait=true'
+  continueOnError: false
+
+- task: Maven@3
+  displayName: 'create jars with dependency'
+  inputs:
+    mavenPomFile: './ctui-value-extraction/pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    jdkArchitectureOption: 'x64'
+    goals: 'clean package -D scoverage.skip=true'
+
+#-----------------------------------
+# Archive and Publish Artefact
+#------------------------------------
+- task: CopyFiles@2
+  displayName: 'Prepare Artifact ingestion jar'
+  inputs:
+    contents: ctui-value-extraction/ingestion/target/mdf-ctui-value-extraction-fat.jar
+    targetFolder: ctui-value-extraction/jars
+    overWrite: true
+    flattenFolders: true
+
+- task: ArchiveFiles@2
+  displayName: 'Archive Jars Artifact'
+  inputs:
+    rootFolderOrFile: 'ctui-value-extraction/jars'
+    archiveType: 'zip'
+    archiveFile: '$(Build.DefinitionName)-$(Build.BuildNumber).zip'
+    replaceExistingArchive: true
+
+- task: Shell++@0
+  displayName: Generate SHA for ctui-value-extraction jars artifact
+  inputs:
+    type: 'InlineScript'
+    script: 'sha256sum $(Build.DefinitionName)-$(Build.BuildNumber).zip > $(Build.DefinitionName)-$(Build.BuildNumber).zip.sha256'
+
+- task: Shell++@0
+  displayName: Generate SHA for test-data files
+  inputs:
+    type: 'InlineScript'
+    script: 'sha256sum data.zip > data.zip.sha256'
+
+- task: Shell++@0
+  displayName: Generate SHA for docker images
+  inputs:
+    type: 'InlineScript'
+    script: 'sha256sum docker.zip > docker.zip.sha256'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: ctui-value-extraction jars'
+  inputs:
+    PathtoPublish: '$(Build.DefinitionName)-$(Build.BuildNumber).zip'
+    ArtifactName: Artefact
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: ctui-value-extraction test-data'
+  inputs:
+    PathtoPublish: 'data.zip'
+    ArtifactName: Artefact
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: SHA ctui-value-extraction jars'
+  inputs:
+    PathtoPublish: '$(Build.DefinitionName)-$(Build.BuildNumber).zip.sha256'
+    ArtifactName: Artefact
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: SHA ctui-value-extraction test-data'
+  inputs:
+    PathtoPublish: 'data.zip.sha256'
+    ArtifactName: Artefact
