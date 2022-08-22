@@ -1,4 +1,4 @@
-package com.siemens.healthineers.ctui.value.defaultFolder.transformation
+package com.siemens.healthineers.ct.eventlog.extraction.transformation
 
 import com.siemens.healthineers.mdf.transformation.Transformation
 import org.apache.log4j.Logger
@@ -9,7 +9,7 @@ import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
  * @param spark: Spark session
  * @param ds: Dataset to transform
  */
-case class DefaultTransformationImpl(spark:SparkSession, ds:Dataset[Row]) extends Transformation {
+case class CtuiTransformationBatch(spark:SparkSession, ds:Dataset[Row]) extends Transformation {
 
   private val logger =  Logger.getLogger(this.getClass.getName)
 
@@ -19,7 +19,7 @@ case class DefaultTransformationImpl(spark:SparkSession, ds:Dataset[Row]) extend
    * @return DefaultTransformationImpl
    */
 
-  def withDF(df: DataFrame): DefaultTransformationImpl = {
+  def withDF(df: DataFrame): CtuiTransformationBatch = {
     logger.trace("Input dataframe is added")
     copy(ds = df)
   }
@@ -28,7 +28,7 @@ case class DefaultTransformationImpl(spark:SparkSession, ds:Dataset[Row]) extend
    *  Transforms the data as per business logic
    * @return DefaultTransformationImpl with transformed dataset
    */
-  def other: DefaultTransformationImpl = {
+  def other: CtuiTransformationBatch = {
     logger.info("executing other transformation")
     copy(ds = ds)
   }

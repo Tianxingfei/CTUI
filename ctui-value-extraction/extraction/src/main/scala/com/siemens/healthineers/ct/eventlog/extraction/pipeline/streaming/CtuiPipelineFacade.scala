@@ -1,10 +1,5 @@
-package com.siemens.healthineers.ctui.value.defaultFolder.pipeline.streaming
+package com.siemens.healthineers.ct.eventlog.extraction.pipeline.streaming
 
-import com.siemens.healthineers.ctui.value.defaultFolder.transformation.DefaultTransformationImpl
-import com.siemens.healthineers.mdf.ingestion.pipeline.IngestionPipeline
-import com.siemens.healthineers.mdf.ingestion.spark.{ConfigKey, ReadConfig, WriteConfig}
-import com.siemens.healthineers.mdf.transformation.TransformationFactory
-import com.siemens.healthineers.mdf.util.Utility
 import org.apache.log4j.Logger
 import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.{SaveMode, SparkSession}
@@ -12,11 +7,11 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 /**
  * DefaultPipelineFacade Object, Pipeline Facade
  * */
-object DefaultPipelineFacade {
+object CtuiPipelineFacade {
 
   private val logger =  Logger.getLogger(this.getClass.getName)
-  var ReadConfigObjectGetter: Map[ConfigKey.Value, Any] = _
-  var WriteConfigObjectGetter: Map[ConfigKey.Value, Any] = _
+  //var ReadConfigObjectGetter: Map[ConfigKey.Value, Any] = _
+  //var WriteConfigObjectGetter: Map[ConfigKey.Value, Any] = _
 
   /**
    * Initiates the pipeline
@@ -28,6 +23,7 @@ object DefaultPipelineFacade {
 
     logger.info("Default tube pipeline facade execution started")
 
+    /*
     //Capturing the command line arguments
     val inputFolder: String = appArgs(1)
     val outputFolder: String = appArgs(2)
@@ -128,5 +124,7 @@ object DefaultPipelineFacade {
     logger.info("Default tube pipeline execution finished")
     logger.info("Facade execution finished")
   }
+
+     */
 }
 

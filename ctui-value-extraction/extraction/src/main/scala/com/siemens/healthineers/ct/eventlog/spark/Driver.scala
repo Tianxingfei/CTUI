@@ -1,6 +1,6 @@
-package com.siemens.healthineers.ctui.value.spark
+package com.siemens.healthineers.ct.eventlog.extraction.spark
 
-import com.siemens.healthineers.ctui.value.defaultFolder.pipeline.streaming.DefaultPipelineFacade
+import com.siemens.healthineers.ct.eventlog.extraction.pipeline.streaming.CtuiPipelineFacade
 import org.apache.log4j.Logger
 import com.siemens.healthineers.mdf.spark.SparkFactory
 
@@ -18,10 +18,8 @@ object Driver extends App {
     .getSparkSession("ctui-value-extraction") //Use CLI to run from commandline and IDE to run from IntelliJ
   logger.trace(s"Spark session object fetched from factory.")
 
-  DefaultPipelineFacade(args, spark)
+  CtuiPipelineFacade(args, spark)
 
-  //If DataOps is required, use following pipeline facade & remove the DefaultPipelineFacade() and associated files
-  //DefaultPipelineFacadeWithDataOps(args, spark)
 
   logger.info("Application finished!")
 }

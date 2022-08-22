@@ -1,4 +1,4 @@
-package com.siemens.healthineers.ctui.value.defaultFolder.util
+package com.siemens.healthineers.ct.eventlog.extraction.util
 
 import org.apache.spark.sql.types._
 

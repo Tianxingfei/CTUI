@@ -76,14 +76,6 @@ steps:
     flattenFolders: true
 
 - task: CopyFiles@2
-  displayName: 'Prepare Artifact ingestion-bdd jar'
-  inputs:
-    contents: ctui-value-extraction/ingestion-bdd/target/mdf-ctui-value-extraction-bdd-fat.jar
-    targetFolder: ctui-value-extraction/jars
-    overWrite: true
-    flattenFolders: true
-
-- task: CopyFiles@2
   displayName: 'Prepare Test Data Artifact ingestion-bdd'
   inputs:
     SourceFolder: $(Build.SourcesDirectory)/ctui-value-extraction/ingestion-bdd/data
@@ -100,22 +92,6 @@ steps:
     archiveFile: '$(Build.DefinitionName)-$(Build.BuildNumber).zip'
     replaceExistingArchive: true
 
-- task: ArchiveFiles@2
-  displayName: 'Archive Data Artifact ingestion-bdd'
-  inputs:
-    rootFolderOrFile: 'ctui-value-extraction/data'
-    archiveType: 'zip'
-    archiveFile: 'data.zip'
-    replaceExistingArchive: true
-
-- task: ArchiveFiles@2
-  displayName: 'Archive docker image files'
-  inputs:
-    rootFolderOrFile: 'docker'
-    archiveType: 'zip'
-    archiveFile: 'docker.zip'
-    replaceExistingArchive: false     
-    
 - task: Shell++@0
   displayName: Generate SHA for ctui-value-extraction jars artifact
   inputs:
@@ -147,12 +123,6 @@ steps:
     ArtifactName: Artefact
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: docker images'
-  inputs:
-    PathtoPublish: 'docker.zip'
-    ArtifactName: Artefact    
-
-- task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: SHA ctui-value-extraction jars'
   inputs:
     PathtoPublish: '$(Build.DefinitionName)-$(Build.BuildNumber).zip.sha256'
@@ -162,10 +132,4 @@ steps:
   displayName: 'Publish Artifact: SHA ctui-value-extraction test-data'
   inputs:
     PathtoPublish: 'data.zip.sha256'
-    ArtifactName: Artefact
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: SHA docker images'
-  inputs:
-    PathtoPublish: 'docker.zip.sha256'
     ArtifactName: Artefact
