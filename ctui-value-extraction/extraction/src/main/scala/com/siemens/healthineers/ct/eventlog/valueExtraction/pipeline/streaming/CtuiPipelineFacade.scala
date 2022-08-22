@@ -1,4 +1,4 @@
-package com.siemens.healthineers.ct.eventlog.extraction.pipeline.streaming
+package com.siemens.healthineers.ct.eventlog.extraction.valueExtraction.pipeline.streaming
 
 import org.apache.log4j.Logger
 import org.apache.spark.sql.functions.col

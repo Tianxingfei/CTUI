@@ -1,4 +1,4 @@
-package com.siemens.healthineers.ct.eventlog.extraction.util
+package com.siemens.healthineers.ct.eventlog.valueExtraction.util
 
 import org.apache.spark.sql.types._
 
