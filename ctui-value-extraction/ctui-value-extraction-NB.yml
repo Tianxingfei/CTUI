@@ -1,0 +1,65 @@
+# pipeline for SonarQube scan, WhiteSource scan
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: Center/BuildTemplates
+    - repository: self
+      clean: true
+
+# A pipeline with no CI trigger
+trigger: none
+
+schedules:
+  - cron: "00 02 * * Mon-Fri"
+    displayName: M-F 2:00 AM (UTC + 5:30) India daily build
+    branches:
+      include:
+        - master
+
+variables:
+  ScheduleCondition: and(succeeded(), in(variables['Build.Reason'], 'Schedule', 'Manual'))
+
+jobs:
+- job: SonarQubeWhiteSourceZeroNorth
+  pool:
+    Image: ubuntu-latest
+
+  steps:
+
+  - task: MavenAuthenticate@0
+    inputs:
+      artifactsFeeds: 'intern-3rdparty-cleared'
+
+  - task: Maven@3
+    inputs:
+      mavenPomFile: './ctui-value-extraction/pom.xml'
+      mavenOptions: '-Xmx3072m'
+      mavenFeedAuthenticate: true
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.8'
+      jdkArchitectureOption: 'x64'
+      goals: 'clean scoverage:report sonar:sonar -D sonar.projectKey=$(SonarProjectKey) -D sonar.host.url=$(SonarHostUrl) -D sonar.login=$(SonarLogin) -D sonar.branch.name=$(Build.SourceBranch)'
+
+  - template: WhiteSourceScan.yml@templates
+    parameters:
+      wsAgentConfigFile: '$(Build.SourcesDirectory)/ctui-value-extraction/wss-unified-agent.config'
+
+  #ZeroNorth Configurations
+  - template: TriggerZeroNorthWebHook.yml@templates
+    parameters:
+      ZeroNorthSQWebHook: '$(ZeroNorthSQWebHook)'
+      ZeroNorthWSWebHook: '$(ZeroNorthWSWebHook)'
+      condition: ${{variables.ScheduleCondition}}
+
+- job: SbomSDLCredential
+  pool:
+    vmImage: 'windows-latest'
+
+  steps:
+
+  - template: SDLScanTools.yml@templates
+    parameters:
+      enableCredScan: True
+      scanFolder: '$(Build.SourcesDirectory)'
