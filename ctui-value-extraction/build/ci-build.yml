@@ -75,15 +75,6 @@ steps:
     overWrite: true
     flattenFolders: true
 
-- task: CopyFiles@2
-  displayName: 'Prepare Test Data Artifact ingestion-bdd'
-  inputs:
-    SourceFolder: $(Build.SourcesDirectory)/ctui-value-extraction/ingestion-bdd/data
-    contents: /**
-    targetFolder: ctui-value-extraction/data
-    overWrite: true
-    flattenFolders: false
-
 - task: ArchiveFiles@2
   displayName: 'Archive Jars Artifact'
   inputs:
