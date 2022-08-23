@@ -1,6 +1,6 @@
 package com.siemens.healthineers.ct.eventlog.valueExtraction.transformation
 
-import com.siemens.healthineers.mdf.transformation.Transformation
+/*
 import org.apache.log4j.Logger
 import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 
@@ -50,3 +50,5 @@ case class CtuiTransformationBatch(spark:SparkSession, ds:Dataset[Row]) extends 
    */
   override def df: DataFrame = ds.toDF()
 }
+
+ */

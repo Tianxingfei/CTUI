@@ -8,8 +8,7 @@
     <artifactId>ctui-value-extraction</artifactId>
     <version>1.0.0</version>
     <modules>
-        <module>ingestion</module>
-        <module>ingestion-bdd</module>
+        <module>extraction</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -52,11 +51,6 @@
             <artifactId>scalatest_${scala.version.major}</artifactId>
             <version>3.1.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.scalatest</groupId>
-            <artifactId>scalatest-junit_${scala.version.major}</artifactId>
-            <version>3.0.0-SNAP13</version>
-        </dependency>
         <!-- scalaTest -->
 
         <!-- https://mvnrepository.com/artifact/com.github.mrpowers/spark-fast-tests -->
@@ -78,6 +72,19 @@
             <version>${spark.version}</version>
         </dependency>
         <!-- /spark -->
+
+        <!-- https://mvnrepository.com/artifact/io.delta/delta-core -->
+        <dependency>
+            <groupId>io.delta</groupId>
+            <artifactId>delta-core_2.12</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.databricks/spark-xml -->
+        <dependency>
+            <groupId>com.databricks</groupId>
+            <artifactId>spark-xml_2.12</artifactId>
+            <version>0.14.0</version>
+        </dependency>
 
     </dependencies>
 
