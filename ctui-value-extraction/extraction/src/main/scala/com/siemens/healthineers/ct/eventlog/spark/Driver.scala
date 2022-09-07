@@ -20,6 +20,7 @@ object Driver extends App {
 
   CtuiPipelineFacade(args, spark)
 
-
   logger.info("Application finished!")
+
+  //a push test by Tian Xing Fei
 }

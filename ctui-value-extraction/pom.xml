@@ -7,10 +7,10 @@
     <groupId>com.siemens.healthineers.daf</groupId>
     <artifactId>ctui-value-extraction</artifactId>
     <version>1.0.0</version>
-    <modules>
+<!--    <modules>
         <module>ingestion</module>
         <module>ingestion-bdd</module>
-    </modules>
+    </modules>-->
     <packaging>pom</packaging>
 
     <properties>
@@ -52,11 +52,11 @@
             <artifactId>scalatest_${scala.version.major}</artifactId>
             <version>3.1.2</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest-junit_${scala.version.major}</artifactId>
             <version>3.0.0-SNAP13</version>
-        </dependency>
+        </dependency>-->
         <!-- scalaTest -->
 
         <!-- https://mvnrepository.com/artifact/com.github.mrpowers/spark-fast-tests -->
